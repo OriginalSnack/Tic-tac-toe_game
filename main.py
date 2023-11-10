@@ -1,3 +1,23 @@
+import json
+
+instructions = """
+This will be our tic tac toe board
+
+ (1,1) | (2,1) | (3,1) 
+-------|-------|------
+ (1,2) | (2,2) | (3,2) 
+-------|-------|------
+ (1,3) | (2,3) | (3,3) 
+
+*instructions:
+0. yoy have a devision, choose new game or start from last check point
+1. Insert the couple of numbers (1-3) to put your sign,
+2. You must fill all  spots to get result,
+3. Player 1 will go first.
+4. if you wanna save your game and continue, any player may write "7 7" and confirm saving
+"""
+
+
 def print_board(sign_dict):
     for i in range(3):
         row = []
@@ -11,7 +31,7 @@ def print_board(sign_dict):
 index_list = []
 
 
-def take_input(player_name):
+def take_input(player_name,sign_dict):
     while True:
         x, y = map(int, input(f'{player_name}: ').split())
         x -= 1
@@ -22,11 +42,25 @@ def take_input(player_name):
                 continue
             index_list.append((x, y))
             return x, y
+        elif x == 6 and y == 6:
+            check_point = input("Do you realy want to save game?:")
+            if check_point == "yes":
+                saving(sign_dict)
+                exit()
+            else:
+                continue
+        else:
+            print("Fail!, try again")
+            exit()
 
 
-#       _(0,0)_|_(1,0)_|_(2,0)_
-#       _(0,1)_|_(1,1)_|_(1,2)_
-#        (0,2) | (1,2) | (2,2)
+def saving(sign_dict):
+    with open('check_point.json', 'w') as file:
+        json.dump(sign_dict, file)
+def reader():
+    with open('check_point.json', 'r') as file:
+        sign_dict = json.load(file)
+    return sign_dict
 
 def betterResult_calculation(sign_dict, player_one, player_two):
     for i in range(3):
@@ -70,25 +104,27 @@ def betterResult_calculation(sign_dict, player_one, player_two):
 
 
 def main():
-    print("Welcome to sunny's tic tac toe game.!!")
+    print("Welcome to  tic tac toe game.!!")
     player_one = input("Enter player 1 name: ")
     player_two = input("Enter player 2 name: ")
     print(f"Thank you for joining Mr./Mrs. {player_one} and Mr./Mrs. {player_two}")
+    print(instructions)
     print(f"Mr. {player_one}'s sign is - X")
     print(f"Mr. {player_two}'s sign is - O")
-    input("Enter any key to start the game: ")
-
-    sign_dict = [[' ' for _ in range(3)] for _ in range(3)]
+    reading=input("Do you want to start from last check point:")
+    if reading=="yes":
+        sign_dict=reader()
+    else:
+        sign_dict = [[' ' for _ in range(3)] for _ in range(3)]
 
     print_board(sign_dict)
     for i in range(0, 9):
         if i % 2 == 0:
-            index = take_input(player_one)
+            index = take_input(player_one,sign_dict)
             sign_dict[index[0]][index[1]] = 'X'
         else:
-            index = take_input(player_two)
+            index = take_input(player_two,sign_dict)
             sign_dict[index[0]][index[1]] = 'O'
-
         print_board(sign_dict)
 
         if betterResult_calculation(sign_dict, player_one, player_two):
