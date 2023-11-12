@@ -1,5 +1,5 @@
 import json
-
+# додав інструкцію, щоб учасники зрозуміли правила
 instructions = """
 This will be our tic tac toe board
 
@@ -51,9 +51,10 @@ def take_input(player_name,sign_dict):
                 continue
         else:
             print("Fail!, try again")
-            exit()
+            continue
+# поставив continue щоб якщо гравець поставив якусь фігню, то він переграв
 
-
+#два методи, один записує в файл поточну таблицю, другий читає збережену таблицю, коли потрібно
 def saving(sign_dict):
     with open('check_point.json', 'w') as file:
         json.dump(sign_dict, file)
